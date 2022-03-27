@@ -24,6 +24,8 @@
 package org.catrobat.catroid.ui.recyclerview.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -51,6 +53,7 @@ import org.catrobat.catroid.ui.BottomBar
 import org.catrobat.catroid.ui.fragment.AddBrickFragment
 import org.catrobat.catroid.ui.fragment.BrickCategoryFragment
 import org.catrobat.catroid.ui.fragment.BrickCategoryFragment.OnCategorySelectedListener
+import org.catrobat.catroid.ui.fragment.CategoryBricksFactory
 import org.catrobat.catroid.ui.fragment.UserDefinedBrickListFragment
 import org.catrobat.catroid.ui.settingsfragments.SettingsFragment
 import org.catrobat.catroid.utils.SnackbarUtil
@@ -336,6 +339,30 @@ class CatblocksScriptFragment(
                 projectManager.currentSprite.scriptList.add(emptyBrick.script)
                 return emptyBrick.script.scriptId.toString()
             }
+        }
+
+        @JavascriptInterface
+        fun helpBrick(brickStrIdToHelp: String): String? {
+            val uuidBrickIdToHelp = UUID.fromString(brickStrIdToHelp)
+
+            val foundBrick = projectManager.currentSprite.findBrickInSprite(uuidBrickIdToHelp)
+                ?: return ""
+
+            val sprite = ProjectManager.getInstance().currentSprite
+            val backgroundSprite =
+                ProjectManager.getInstance().currentlyEditedScene.backgroundSprite
+            val category = CategoryBricksFactory().getBrickCategory(
+                foundBrick, sprite === backgroundSprite,
+                context!!
+            )
+
+            val brickHelpUrl: String = foundBrick.getHelpUrl(category)
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(brickHelpUrl)
+            )
+            startActivity(intent)
+            return null;
         }
     }
 
