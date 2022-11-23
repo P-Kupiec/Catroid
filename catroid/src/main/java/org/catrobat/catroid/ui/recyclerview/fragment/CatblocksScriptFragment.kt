@@ -24,7 +24,10 @@
 package org.catrobat.catroid.ui.recyclerview.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -36,6 +39,8 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.ListFragment
 import androidx.webkit.WebViewAssetLoader
@@ -63,6 +68,7 @@ class CatblocksScriptFragment(
 ) : Fragment(), OnCategorySelectedListener, AddBrickFragment.OnAddBrickListener {
 
     private var webview: WebView? = null
+    private var advancedMode: Boolean = false
 
     companion object {
         val TAG: String = CatblocksScriptFragment::class.java.simpleName
@@ -90,6 +96,7 @@ class CatblocksScriptFragment(
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -101,6 +108,7 @@ class CatblocksScriptFragment(
 
         val view = View.inflate(activity, R.layout.fragment_catblocks, null)
         val webView = view.findViewById<WebView>(R.id.catblocksWebView)
+
         initWebView(webView)
         this.webview = webView
         return view
@@ -113,6 +121,8 @@ class CatblocksScriptFragment(
         if (BuildConfig.FEATURE_CATBLOCKS_DEBUGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
+
+        advancedMode = SettingsFragment.isCatblocksAdvancedModeEnabled(context)
 
         val assetLoader: WebViewAssetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(requireActivity()))
@@ -131,6 +141,21 @@ class CatblocksScriptFragment(
                 return assetLoader.shouldInterceptRequest(request.url)
             }
         }
+
+        if (advancedMode) {
+            activity?.findViewById<View?>(R.id.button_play)?.backgroundTintList =
+                context?.let {
+                    ContextCompat.getColor(
+                        it, R.color
+                            .action_button_advanced_mode)
+                }?.let { ColorStateList.valueOf(it) };
+            activity?.findViewById<View?>(R.id.button_add)?.backgroundTintList =
+                context?.let {
+                    ContextCompat.getColor(
+                        it, R.color
+                            .action_button_advanced_mode)
+                }?.let { ColorStateList.valueOf(it) };
+        }
         catblocksWebView.loadUrl("https://appassets.androidplatform.net/assets/catblocks/index.html")
     }
 
@@ -143,6 +168,21 @@ class CatblocksScriptFragment(
 
         override fun run() {
             SettingsFragment.setUseCatBlocks(context, false)
+
+            if (advancedMode) {
+                activity?.findViewById<View?>(R.id.button_play)?.backgroundTintList =
+                    context?.let {
+                        ContextCompat.getColor(
+                            it, R.color
+                                .action_button)
+                    }?.let { ColorStateList.valueOf(it) };
+                activity?.findViewById<View?>(R.id.button_add)?.backgroundTintList =
+                    context?.let {
+                        ContextCompat.getColor(
+                            it, R.color
+                                .action_button)
+                    }?.let { ColorStateList.valueOf(it) };
+            }
 
             val scriptFragment: ScriptFragment = if (brickToFocus == null) {
                 ScriptFragment()
@@ -352,6 +392,17 @@ class CatblocksScriptFragment(
                 return emptyBrick.script.scriptId.toString()
             }
         }
+
+        @JavascriptInterface
+        fun isAdvMode(): Boolean {
+            return advancedMode
+        }
+
+        @JavascriptInterface
+        fun showMessage(msg: String) {
+//            Toast.makeText(context, "$msg", Toast.LENGTH_SHORT).show()
+            Log.d("catblocks", msg)
+        }
     }
 
     fun handleAddButton() {
@@ -417,7 +468,9 @@ class CatblocksScriptFragment(
         }
 
         val addedBricksString = Gson().toJson(addedBricks)
-        webview!!.evaluateJavascript("javascript:CatBlocks.addBricks($addedBricksString);", null)
+
+        webview!!.evaluateJavascript("javascript:CatBlocks.addBricks($addedBricksString);",
+                                     null)
     }
 
     private data class BrickInfoHolder(val brickId: String, val brickType: String)

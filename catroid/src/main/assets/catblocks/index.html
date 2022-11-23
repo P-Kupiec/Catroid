@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catblocks 2D view</title>
   <link href="main.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
 </head>
 
 <body>
@@ -25,7 +26,8 @@
           noImageFound: 'No_Image_Available.jpg',
           renderLooks: false,
           renderSounds: false,
-          readOnly: false
+          readOnly: false,
+          isAdvanced: Android.isAdvMode()
         }).then(() => {
           const programXML = Android.getCurrentProject();
 
