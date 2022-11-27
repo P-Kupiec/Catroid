@@ -130,6 +130,7 @@ public class SettingsFragment extends PreferenceFragment {
 	public static final String TAG = SettingsFragment.class.getSimpleName();
 
 	public static final String SETTINGS_USE_CATBLOCKS = "settings_use_catblocks";
+	public static final String SETTINGS_CATBLOCKS_ADV_MODE = "setting_enable_catblocks_advanced_mode";
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -579,5 +580,9 @@ public class SettingsFragment extends PreferenceFragment {
 		getSharedPreferences(context).edit()
 				.putBoolean(SETTINGS_USE_CATBLOCKS, useCatBlocks)
 				.apply();
+	}
+
+	public static boolean isCatblocksAdvancedModeEnabled(Context context) {
+		return getBooleanSharedPreference(false, SETTINGS_CATBLOCKS_ADV_MODE, context);
 	}
 }

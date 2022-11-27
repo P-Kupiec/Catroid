@@ -56,7 +56,8 @@
           noImageFound: 'No_Image_Available.jpg',
           renderLooks: false,
           renderSounds: false,
-          readOnly: false
+          readOnly: false,
+          advancedMode: Android.isAdvancedMode()
         }).then(() => {
           const programXML = Android.getCurrentProject();
           const scene = Android.getSceneNameToDisplay();
