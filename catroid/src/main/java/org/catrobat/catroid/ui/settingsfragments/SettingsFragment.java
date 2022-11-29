@@ -36,6 +36,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
 import org.catrobat.catroid.BuildConfig;
 import org.catrobat.catroid.ProjectManager;
@@ -60,6 +61,7 @@ import static org.catrobat.catroid.CatroidApplication.defaultSystemLanguage;
 import static org.catrobat.catroid.common.SharedPreferenceKeys.DEVICE_LANGUAGE;
 import static org.catrobat.catroid.common.SharedPreferenceKeys.LANGUAGE_TAGS;
 import static org.catrobat.catroid.common.SharedPreferenceKeys.LANGUAGE_TAG_KEY;
+import static org.catrobat.catroid.common.SharedPreferenceKeys.LAST_USED_LANGUAGE;
 import static org.koin.java.KoinJavaComponent.inject;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -105,6 +107,7 @@ public class SettingsFragment extends PreferenceFragment {
 	public static final String EV3_SCREEN_KEY = "setting_ev3_screen";
 	public static final String DRONE_SCREEN_KEY = "settings_drone_screen";
 	public static final String RASPBERRY_SCREEN_KEY = "settings_raspberry_screen";
+	public static final String CATBLOCKS_ADV_MODE_KEY = "setting_catblocks_advanced_mode_screen";
 
 	public static final String NXT_SETTINGS_CATEGORY = "setting_nxt_category";
 	public static final String[] NXT_SENSORS = {"setting_mindstorms_nxt_sensor_1", "setting_mindstorms_nxt_sensor_2",
@@ -130,8 +133,11 @@ public class SettingsFragment extends PreferenceFragment {
 	public static final String TAG = SettingsFragment.class.getSimpleName();
 
 	public static final String SETTINGS_USE_CATBLOCKS = "settings_use_catblocks";
-	public static final String SETTINGS_CATBLOCKS_ADV_MODE = "setting_enable_catblocks_advanced_mode";
+	public static final String SETTINGS_CATBLOCKS_ADV_MODE = "setting_catblocks_advanced_mode";
+	public static final String SETTINGS_CATBLOCKS_ADV_MODE_LANGUAGE =
+			"setting_catblocks_advanced_mode_language";
 
+	public static ListPreference listPreference;
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -247,6 +253,12 @@ public class SettingsFragment extends PreferenceFragment {
 				getFragmentManager().beginTransaction()
 						.replace(R.id.content_frame, new RaspberryPiSettingsFragment(), RaspberryPiSettingsFragment.TAG)
 						.addToBackStack(RaspberryPiSettingsFragment.TAG)
+						.commit();
+				break;
+			case CATBLOCKS_ADV_MODE_KEY:
+				getFragmentManager().beginTransaction()
+						.replace(R.id.content_frame, new AdvancedModeSettingsFragment(), AdvancedModeSettingsFragment.TAG)
+						.addToBackStack(AdvancedModeSettingsFragment.TAG)
 						.commit();
 				break;
 		}
@@ -521,7 +533,7 @@ public class SettingsFragment extends PreferenceFragment {
 		String[] languages = new String[languagesNames.size()];
 		languagesNames.toArray(languages);
 
-		final ListPreference listPreference = (ListPreference) findPreference(SETTINGS_MULTILINGUAL);
+		listPreference = (ListPreference) findPreference(SETTINGS_MULTILINGUAL);
 		listPreference.setEntries(languages);
 		listPreference.setEntryValues(LANGUAGE_TAGS);
 		listPreference.setOnPreferenceChangeListener((preference, languageTag) -> {
@@ -529,6 +541,9 @@ public class SettingsFragment extends PreferenceFragment {
 			setLanguageSharedPreference(getActivity().getBaseContext(), selectedLanguageTag);
 			startActivity(new Intent(getActivity().getBaseContext(), MainMenuActivity.class));
 			getActivity().finishAffinity();
+			if (isCatblocksAdvancedModeEnabled(getContext())) {
+				uncheckAdvancedModeLanguage(getContext(), selectedLanguageTag);
+			}
 			new Thread(() -> inject(ProjectsCategoriesSync.class).getValue().sync(true));
 			return true;
 		});
@@ -584,5 +599,30 @@ public class SettingsFragment extends PreferenceFragment {
 
 	public static boolean isCatblocksAdvancedModeEnabled(Context context) {
 		return getBooleanSharedPreference(false, SETTINGS_CATBLOCKS_ADV_MODE, context);
+	}
+
+	public static boolean isCatblocksAdvancedModeLanguageEnabled(Context context) {
+		return getBooleanSharedPreference(false, SETTINGS_CATBLOCKS_ADV_MODE_LANGUAGE, context);
+	}
+
+	public static void uncheckAdvancedModeLanguage(Context context, String languageTag) {
+		if (languageTag.equals("en")) {
+			return;
+		}
+		getSharedPreferences(context).edit()
+				.putBoolean(SETTINGS_CATBLOCKS_ADV_MODE_LANGUAGE, false)
+				.apply();
+	}
+
+	public static String getCurrentLanguage(Context context) {
+		return getSharedPreferences(context).getString(LANGUAGE_TAG_KEY, "");
+	}
+
+	public static void setLastUsedLanguage(Context context, String language) {
+		getSharedPreferences(context).edit().putString(LAST_USED_LANGUAGE, language).apply();
+	}
+
+	public static String getLastUsedLanguage(Context context) {
+		return getSharedPreferences(context).getString(LAST_USED_LANGUAGE, "");
 	}
 }

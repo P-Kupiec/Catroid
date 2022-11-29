@@ -32,6 +32,7 @@ public final class SharedPreferenceKeys {
 	public static final String AGREED_TO_PRIVACY_POLICY_VERSION =
 			"AgreedToCurrentPrivacyPolicy";
 
+	public static  String LAST_USED_LANGUAGE = "";
 	public static final String DEVICE_LANGUAGE = "deviceLanguage";
 	public static final String LANGUAGE_TAG_KEY = "applicationLanguage";
 	public static final String[] LANGUAGE_TAGS = {DEVICE_LANGUAGE, "af", "az", "ms", "bs", "ca",
