@@ -80,10 +80,12 @@ public class AdvancedModeSettingsFragment extends PreferenceFragment {
 		String savedLanguage = SettingsFragment.getLastUsedLanguage(getContext());
 		String englishTag = "en";
 		if (enabled) {
+			SettingsFragment.setLastUsedLanguage(getContext(), currentLanguage);
+
 			if (currentLanguage.equals(englishTag)) {
 				return;
 			}
-			SettingsFragment.setLastUsedLanguage(getContext(), currentLanguage);
+
 			SettingsFragment.setLanguageSharedPreference(getActivity().getBaseContext(), englishTag);
 			SettingsFragment.listPreference.setValue(englishTag);
 		} else {

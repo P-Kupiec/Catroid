@@ -24,6 +24,7 @@
 package org.catrobat.catroid.ui.recyclerview.fragment
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,6 +38,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.webkit.WebViewAssetLoader
 import com.google.gson.Gson
@@ -135,6 +137,17 @@ class CatblocksScriptFragment(
                 return assetLoader.shouldInterceptRequest(request.url)
             }
         }
+
+        if (advancedMode) {
+            activity?.findViewById<View?>(R.id.button_play)?.backgroundTintList =
+                context?.let {
+                    ContextCompat.getColor(it, R.color.action_button_advanced_mode)
+                }?.let { ColorStateList.valueOf(it) };
+            activity?.findViewById<View?>(R.id.button_add)?.backgroundTintList =
+                context?.let {
+                    ContextCompat.getColor(it, R.color.action_button_advanced_mode)
+                }?.let { ColorStateList.valueOf(it) };
+        }
         catblocksWebView.loadUrl("https://appassets.androidplatform.net/assets/catblocks/index.html")
     }
 
@@ -143,6 +156,17 @@ class CatblocksScriptFragment(
 
         override fun run() {
             SettingsFragment.setUseCatBlocks(context, false)
+
+            if (advancedMode) {
+                activity?.findViewById<View?>(R.id.button_play)?.backgroundTintList =
+                    context?.let {
+                        ContextCompat.getColor(it, R.color.action_button)
+                    }?.let { ColorStateList.valueOf(it) };
+                activity?.findViewById<View?>(R.id.button_add)?.backgroundTintList =
+                    context?.let {
+                        ContextCompat.getColor(it, R.color.action_button)
+                    }?.let { ColorStateList.valueOf(it) };
+            }
 
             val scriptFragment: ScriptFragment = if (brickToFocus == null) {
                 ScriptFragment()
