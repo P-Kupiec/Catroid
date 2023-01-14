@@ -116,7 +116,7 @@ class CatblocksScriptFragment(
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
-        advancedMode = SettingsFragment.isCatblocksAdvancedModeEnabled(context)
+        advancedMode = SettingsFragment.getCatBlocksAdvancedMode(context)
 
         val assetLoader: WebViewAssetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(requireActivity()))

@@ -325,10 +325,10 @@ public class ScriptFragment extends ListFragment implements
 		});
 
 		setHasOptionsMenu(true);
-		if (SettingsFragment.isCatblocksAdvancedModeEnabled(getContext()) && !SettingsFragment.getCatBlocksSwitched(getContext())) {
+		if (SettingsFragment.getCatBlocksAdvancedMode(getContext()) && !SettingsFragment.getCatBlocksSwitched(getContext())) {
 			SettingsFragment.setCatBlocksSwitched(getContext(), true);
 			switchToCatblocks();
-		} else if (!SettingsFragment.isCatblocksAdvancedModeEnabled(getContext())) {
+		} else if (!SettingsFragment.getCatBlocksAdvancedMode(getContext())) {
 			SettingsFragment.setCatBlocksSwitched(getContext(), false);
 		}
 		return view;

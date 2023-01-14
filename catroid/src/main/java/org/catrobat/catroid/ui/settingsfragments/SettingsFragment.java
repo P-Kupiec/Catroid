@@ -583,8 +583,14 @@ public class SettingsFragment extends PreferenceFragment {
 				.apply();
 	}
 
-	public static boolean isCatblocksAdvancedModeEnabled(Context context) {
+	public static boolean getCatBlocksAdvancedMode(Context context) {
 		return getBooleanSharedPreference(false, SETTINGS_CATBLOCKS_ADV_MODE, context);
+	}
+
+	public static void setCatBlocksAdvancedMode(Context context, boolean advancedMode) {
+		getSharedPreferences(context).edit()
+				.putBoolean(SETTINGS_CATBLOCKS_ADV_MODE, advancedMode)
+				.apply();
 	}
 
 	public static boolean getCatBlocksSwitched(Context context) {
