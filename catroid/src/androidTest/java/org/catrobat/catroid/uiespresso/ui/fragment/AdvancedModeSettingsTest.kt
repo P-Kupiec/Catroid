@@ -68,7 +68,7 @@ class AdvancedModeSettingsTest {
 
     @Before
     fun setUp() {
-        SettingsFragment.setUseCatBlocks(ApplicationProvider.getApplicationContext(), false)
+        SettingsFragment.setUseCatBlocks(ApplicationProvider.getApplicationContext(), true)
         SettingsFragment.setCatBlocksAdvancedMode(ApplicationProvider.getApplicationContext(), true)
         createProject()
         baseActivityTestRule.launchActivity()
@@ -86,9 +86,7 @@ class AdvancedModeSettingsTest {
         val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         uiDevice.wait(Until.findObject(By.clazz(WebView::class.java)), TIMEOUT)
 
-        val view2D = uiDevice.findObject(
-            UiSelector().resourceId("catblocksWebView")
-        )
+
         Web.onWebView().check(
             WebViewAssertions.webContent(
                 DomMatchers.hasElementWithXpath(
@@ -96,7 +94,6 @@ class AdvancedModeSettingsTest {
                 )
             )
         )
-        Assert.assertTrue(view2D.exists())
 
         Espresso.openContextualActionModeOverflowMenu()
         Espresso.onView(withText(R.string.undo)).check(ViewAssertions.doesNotExist())

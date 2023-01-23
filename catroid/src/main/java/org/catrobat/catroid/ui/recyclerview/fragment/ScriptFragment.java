@@ -326,7 +326,6 @@ public class ScriptFragment extends ListFragment implements
 
 		setHasOptionsMenu(true);
 		if (SettingsFragment.getCatBlocksAdvancedMode(getContext()) && !SettingsFragment.getCatBlocksSwitched(getContext())) {
-			SettingsFragment.setCatBlocksSwitched(getContext(), true);
 			switchToCatblocks();
 		} else if (!SettingsFragment.getCatBlocksAdvancedMode(getContext())) {
 			SettingsFragment.setCatBlocksSwitched(getContext(), false);
@@ -892,6 +891,7 @@ public class ScriptFragment extends ListFragment implements
 		}
 
 		SettingsFragment.setUseCatBlocks(getContext(), true);
+		SettingsFragment.setCatBlocksSwitched(getContext(), true);
 
 		CatblocksScriptFragment catblocksFragment = new CatblocksScriptFragment(firstVisibleBrickID);
 

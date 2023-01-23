@@ -23,6 +23,8 @@
 
 package org.catrobat.catroid.uiespresso.ui.fragment
 
+import android.graphics.Color
+import android.os.SystemClock
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -78,17 +80,25 @@ class AdvancedModeActionButtonsTest {
 
         val addBtn = baseActivityTestRule.activity.findViewById<View?>(R.id.button_add)
 
-        Assert.assertEquals(playBtn.backgroundTintList, "advcolor")
+        val standardColor = Color.parseColor(baseActivityTestRule.activity.getString(R.color
+                                                                                    .action_button))
 
-        Assert.assertEquals(addBtn.backgroundTintList, "advcolor")
+        val advColor = Color.parseColor(baseActivityTestRule.activity.getString(R.color
+                                                                             .action_button_advanced_mode))
+
+        Assert.assertEquals(advColor, playBtn.backgroundTintList?.getDefaultColor())
+
+        Assert.assertEquals(advColor, addBtn.backgroundTintList?.getDefaultColor())
 
         Espresso.openContextualActionModeOverflowMenu()
 
         Espresso.onView(withText(R.string.catblocks)).perform(ViewActions.click())
 
-        Assert.assertEquals(playBtn.backgroundTintList, "standardcolor")
+        SystemClock.sleep(500);
 
-        Assert.assertEquals(addBtn.backgroundTintList, "standardcolor")
+        Assert.assertEquals(standardColor, playBtn.backgroundTintList?.getDefaultColor())
+
+        Assert.assertEquals(standardColor, playBtn.backgroundTintList?.getDefaultColor())
     }
 
     private fun createProject() {

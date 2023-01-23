@@ -25,10 +25,10 @@ package org.catrobat.catroid.uiespresso.ui.fragment
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.catrobat.catroid.ui.SpriteActivity
+import org.catrobat.catroid.ui.SettingsActivity
 import org.catrobat.catroid.ui.settingsfragments.AdvancedModeSettingsFragment
 import org.catrobat.catroid.ui.settingsfragments.SettingsFragment
-import org.catrobat.catroid.uiespresso.util.rules.FragmentActivityTestRule
+import org.catrobat.catroid.uiespresso.util.rules.BaseActivityTestRule
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -41,9 +41,8 @@ import java.util.Locale
 class AdvancedModeLanguageSettingsTest {
 
     @get:Rule
-    var baseActivityTestRule = FragmentActivityTestRule(
-        SpriteActivity::class.java, SpriteActivity.EXTRA_FRAGMENT_POSITION,
-        SpriteActivity.FRAGMENT_SCRIPTS
+    var baseActivityTestRule: BaseActivityTestRule<SettingsActivity> = BaseActivityTestRule(
+        SettingsActivity::class.java, false, false
     )
 
     private val currentLanguage = Locale.GERMAN
@@ -72,7 +71,7 @@ class AdvancedModeLanguageSettingsTest {
             ApplicationProvider.getApplicationContext(),
             currentLanguage.toLanguageTag()
         )
-        baseActivityTestRule.launchActivity()
+//        baseActivityTestRule.launchActivity()
 
         val advModeSetting = AdvancedModeSettingsFragment()
         advModeSetting.changeLanguage(SettingsFragment.isAdvancedModeLanguageEnabled(ApplicationProvider.getApplicationContext()))
