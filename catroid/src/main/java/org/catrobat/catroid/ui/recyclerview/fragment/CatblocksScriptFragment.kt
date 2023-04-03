@@ -416,9 +416,7 @@ class CatblocksScriptFragment(
         }
 
         @JavascriptInterface
-        fun isAdvancedMode(): Boolean {
-            return advancedMode
-        }
+        fun isAdvancedMode(): Boolean = advancedMode
     }
 
     fun handleAddButton() {
