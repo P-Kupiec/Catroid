@@ -84,7 +84,6 @@ class AdvancedModeSettingsTest {
         val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         uiDevice.wait(Until.findObject(By.clazz(WebView::class.java)), TIMEOUT)
 
-
         Web.onWebView().check(
             WebViewAssertions.webContent(
                 DomMatchers.hasElementWithXpath(
