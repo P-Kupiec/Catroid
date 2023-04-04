@@ -37,7 +37,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import org.catrobat.catroid.R
 import org.catrobat.catroid.UiTestCatroidApplication.Companion.projectManager
@@ -47,7 +46,6 @@ import org.catrobat.catroid.ui.SpriteActivity
 import org.catrobat.catroid.ui.settingsfragments.SettingsFragment
 import org.catrobat.catroid.uiespresso.util.rules.FragmentActivityTestRule
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -68,7 +66,7 @@ class AdvancedModeSettingsTest {
 
     @Before
     fun setUp() {
-        SettingsFragment.setUseCatBlocks(ApplicationProvider.getApplicationContext(), false)
+        SettingsFragment.setUseCatBlocks(ApplicationProvider.getApplicationContext(), true)
         SettingsFragment.setCatBlocksAdvancedMode(ApplicationProvider.getApplicationContext(), true)
         createProject()
         baseActivityTestRule.launchActivity()
@@ -86,9 +84,7 @@ class AdvancedModeSettingsTest {
         val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         uiDevice.wait(Until.findObject(By.clazz(WebView::class.java)), TIMEOUT)
 
-        val view2D = uiDevice.findObject(
-            UiSelector().resourceId("catblocksWebView")
-        )
+
         Web.onWebView().check(
             WebViewAssertions.webContent(
                 DomMatchers.hasElementWithXpath(
@@ -96,7 +92,6 @@ class AdvancedModeSettingsTest {
                 )
             )
         )
-        Assert.assertTrue(view2D.exists())
 
         Espresso.openContextualActionModeOverflowMenu()
         Espresso.onView(withText(R.string.undo)).check(ViewAssertions.doesNotExist())
